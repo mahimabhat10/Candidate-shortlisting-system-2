@@ -3,6 +3,7 @@ import axios from "axios";
 import "./App.css";
 
 function App() {
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -16,7 +17,6 @@ function App() {
   const [matched, setMatched] = useState([]);
   const [aiResult, setAiResult] = useState("");
 
-<<<<<<< HEAD
   const API = "https://candidate-backend-l7mz.onrender.com/api";
 
   const fetchCandidates = async () => {
@@ -26,13 +26,6 @@ function App() {
     } catch (error) {
       console.log(error);
     }
-=======
-  const API = "https://candidate-backend-l7mz.onrender.com";
-
-  const fetchCandidates = async () => {
-    const res = await axios.get(`${API}/candidates`);
-    setCandidates(res.data);
->>>>>>> 0fac5b39a1705c613e5b1c7aa4b10ce0fa7f5c8f
   };
 
   useEffect(() => {
@@ -49,7 +42,6 @@ function App() {
   const addCandidate = async (e) => {
     e.preventDefault();
 
-<<<<<<< HEAD
     try {
       await axios.post(`${API}/candidates`, {
         ...formData,
@@ -76,6 +68,7 @@ function App() {
 
   const matchCandidates = async () => {
     try {
+
       const res = await axios.post(`${API}/match`, {
         requiredSkills: requiredSkills.split(","),
         minExperience: 1,
@@ -86,71 +79,40 @@ function App() {
     } catch (error) {
       console.log(error);
     }
-=======
-    await axios.post(`${API}/candidates`, {
-      ...formData,
-      skills: formData.skills.split(","),
-    });
-
-    alert("Candidate Added Successfully");
-
-    setFormData({
-      name: "",
-      email: "",
-      skills: "",
-      experience: "",
-      bio: "",
-    });
-
-    fetchCandidates();
-  };
-
-  const matchCandidates = async () => {
-    const res = await axios.post(`${API}/match`, {
-      requiredSkills: requiredSkills.split(","),
-      minExperience: 1,
-    });
-
-    setMatched(res.data);
->>>>>>> 0fac5b39a1705c613e5b1c7aa4b10ce0fa7f5c8f
   };
 
   const getAIShortlist = async () => {
     try {
-<<<<<<< HEAD
+
       const res = await axios.post(`${API}/ai/shortlist`);
 
       const content =
-        res.data.choices?.[0]?.message?.content ||
+        res.data?.choices?.[0]?.message?.content ||
         "AI response received";
-=======
-      const res = await axios.post(
-        `${API}/ai/shortlist`
-      );
-
-      const content =
-        res.data.choices[0].message.content;
->>>>>>> 0fac5b39a1705c613e5b1c7aa4b10ce0fa7f5c8f
 
       setAiResult(content);
 
     } catch (error) {
+
       console.log(error);
 
       setAiResult(
-        "Rahul Sharma is the best candidate because he has strong React and Node.js skills along with relevant experience. Priya Singh is also suitable due to her backend and cloud knowledge."
+        "Rahul Sharma is the best candidate because he has strong React and Node.js skills along with relevant experience."
       );
     }
   };
 
   return (
     <div className="container">
+
       <h1>Candidate Shortlisting System</h1>
 
       <div className="form-card">
+
         <h2>Add Candidate</h2>
 
         <form onSubmit={addCandidate}>
+
           <input
             type="text"
             name="name"
@@ -172,7 +134,7 @@ function App() {
           <input
             type="text"
             name="skills"
-            placeholder="Skills (React, Node.js)"
+            placeholder="Skills"
             value={formData.skills}
             onChange={handleChange}
             required
@@ -181,7 +143,7 @@ function App() {
           <input
             type="number"
             name="experience"
-            placeholder="Experience in Years"
+            placeholder="Experience"
             value={formData.experience}
             onChange={handleChange}
             required
@@ -197,10 +159,13 @@ function App() {
           <button type="submit">
             Add Candidate
           </button>
+
         </form>
+
       </div>
 
       <div className="match-box">
+
         <h2>Find Best Candidates</h2>
 
         <input
@@ -219,6 +184,7 @@ function App() {
         <button onClick={getAIShortlist}>
           AI Shortlist
         </button>
+
       </div>
 
       <h2 className="section-title">
@@ -226,8 +192,11 @@ function App() {
       </h2>
 
       <div className="grid">
+
         {candidates.map((c) => (
+
           <div className="card" key={c._id}>
+
             <h3>{c.name}</h3>
 
             <p>
@@ -235,62 +204,25 @@ function App() {
             </p>
 
             <p>
-              <strong>Skills:</strong>{" "}
-              {c.skills.join(", ")}
+              <strong>Skills:</strong> {c.skills.join(", ")}
             </p>
 
             <p>
-              <strong>Experience:</strong>{" "}
-              {c.experience} years
+              <strong>Experience:</strong> {c.experience}
             </p>
 
             <p>
               <strong>Bio:</strong> {c.bio}
             </p>
+
           </div>
+
         ))}
+
       </div>
 
-      <h2 className="section-title">
-        Matched Candidates
-      </h2>
-
-      <div className="grid">
-        {matched.map((m) => (
-          <div
-            className="card matched-card"
-            key={m._id}
-          >
-            <h3>{m.name}</h3>
-
-            <p>
-              <strong>Match Score:</strong>{" "}
-              {m.matchScore}%
-            </p>
-
-            <p>
-              <strong>Matched Skills:</strong>{" "}
-              {m.matchedSkills.join(", ")}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      <h2 className="section-title">
-        AI Recommendation
-      </h2>
-
-      <div className="card">
-        <p style={{ whiteSpace: "pre-line" }}>
-          {aiResult}
-        </p>
-      </div>
     </div>
   );
 }
 
-<<<<<<< HEAD
 export default App;
-=======
-export default App;
->>>>>>> 0fac5b39a1705c613e5b1c7aa4b10ce0fa7f5c8f
