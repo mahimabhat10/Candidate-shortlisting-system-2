@@ -94,23 +94,17 @@ exports.aiShortlist = async (req, res) => {
 
     const candidates = await Candidate.find();
 
-    let bestCandidate = candidates[0];
+    const sortedCandidates =
+      candidates.sort(
+        (a, b) =>
+          b.experience - a.experience
+      );
 
-    candidates.forEach((candidate) => {
-
-      if (
-        candidate.skills.length >
-        bestCandidate.skills.length
-      ) {
-
-        bestCandidate = candidate;
-
-      }
-
-    });
+    const bestCandidate =
+      sortedCandidates[0];
 
     const recommendation = `
-${bestCandidate.name} is the best candidate because they have skills in ${bestCandidate.skills.join(", ")} and ${bestCandidate.experience} years of experience.
+${bestCandidate.name} is the best candidate because they have ${bestCandidate.experience} years of experience and skills in ${bestCandidate.skills.join(", ")}.
 `;
 
     res.json({
