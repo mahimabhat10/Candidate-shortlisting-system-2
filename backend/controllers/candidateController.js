@@ -88,7 +88,6 @@ exports.matchCandidates = async (req, res) => {
 
   }
 };
-
 exports.aiShortlist = async (req, res) => {
 
   try {
@@ -100,10 +99,8 @@ exports.aiShortlist = async (req, res) => {
     candidates.forEach((candidate) => {
 
       if (
-        candidate.skills.some(
-          skill =>
-            skill.toLowerCase() === "dance"
-        )
+        candidate.skills.length >
+        bestCandidate.skills.length
       ) {
 
         bestCandidate = candidate;
