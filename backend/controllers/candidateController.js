@@ -1,6 +1,7 @@
 const Candidate = require("../models/Candidate");
 
 exports.addCandidate = async (req, res) => {
+
   try {
 
     const candidate = new Candidate(req.body);
@@ -19,7 +20,9 @@ exports.addCandidate = async (req, res) => {
 };
 
 
+
 exports.getCandidates = async (req, res) => {
+
   try {
 
     const candidates = await Candidate.find();
@@ -36,7 +39,9 @@ exports.getCandidates = async (req, res) => {
 };
 
 
+
 exports.matchCandidates = async (req, res) => {
+
   try {
 
     const { requiredSkills } = req.body;
@@ -47,11 +52,19 @@ exports.matchCandidates = async (req, res) => {
 
       const matchedSkills =
         candidate.skills.filter((skill) =>
-          requiredSkills.includes(skill)
+
+          requiredSkills
+            .map(s =>
+              s.toLowerCase().trim()
+            )
+            .includes(
+              skill.toLowerCase().trim()
+            )
         );
 
       const score =
-        (matchedSkills.length / requiredSkills.length) * 100;
+        (matchedSkills.length /
+          requiredSkills.length) * 100;
 
       return {
         ...candidate._doc,
@@ -77,15 +90,39 @@ exports.matchCandidates = async (req, res) => {
 };
 
 
+
 exports.aiShortlist = async (req, res) => {
+
   try {
+
+    const candidates = await Candidate.find();
+
+    let bestCandidate = candidates[0];
+
+    candidates.forEach((candidate) => {
+
+      if (
+        candidate.skills.length >
+        bestCandidate.skills.length
+      ) {
+
+        bestCandidate = candidate;
+
+      }
+
+    });
+
+
+    const recommendation = `
+${bestCandidate.name} is the best candidate because they have strong skills in ${bestCandidate.skills.join(", ")} and ${bestCandidate.experience} years of experience.
+`;
+
 
     res.json({
       choices: [
         {
           message: {
-            content:
-              "Rahul Sharma is the best candidate because he has strong React and Node.js skills with relevant experience. Aman Verma is also suitable because of React and MongoDB knowledge."
+            content: recommendation
           }
         }
       ]
