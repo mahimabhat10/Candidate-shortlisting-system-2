@@ -90,7 +90,6 @@ exports.matchCandidates = async (req, res) => {
 };
 
 
-
 exports.aiShortlist = async (req, res) => {
 
   try {
@@ -102,8 +101,8 @@ exports.aiShortlist = async (req, res) => {
     candidates.forEach((candidate) => {
 
       if (
-        candidate.skills.length >
-        bestCandidate.skills.length
+        candidate.experience >
+        bestCandidate.experience
       ) {
 
         bestCandidate = candidate;
@@ -112,11 +111,9 @@ exports.aiShortlist = async (req, res) => {
 
     });
 
-
     const recommendation = `
-${bestCandidate.name} is the best candidate because they have strong skills in ${bestCandidate.skills.join(", ")} and ${bestCandidate.experience} years of experience.
+${bestCandidate.name} is the best candidate because they have ${bestCandidate.experience} years of experience and strong skills in ${bestCandidate.skills.join(", ")}.
 `;
-
 
     res.json({
       choices: [
