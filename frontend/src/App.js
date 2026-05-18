@@ -13,9 +13,15 @@ function App() {
   });
 
   const [candidates, setCandidates] = useState([]);
-  const [requiredSkills, setRequiredSkills] = useState("");
+
+  const [requiredSkills, setRequiredSkills] =
+    useState("");
+
   const [matched, setMatched] = useState([]);
-  const [aiResult, setAiResult] = useState("");
+
+  const [aiResult, setAiResult] =
+    useState("");
+
 
   const API =
     "https://candidate-backend-l7mz.onrender.com/api";
@@ -39,7 +45,9 @@ function App() {
 
 
   useEffect(() => {
+
     fetchCandidates();
+
   }, []);
 
 
@@ -61,7 +69,9 @@ function App() {
 
       await axios.post(`${API}/candidates`, {
         ...formData,
-        skills: formData.skills.split(","),
+        skills: formData.skills
+          .split(",")
+          .map(skill => skill.trim()),
       });
 
       alert("Candidate Added Successfully");
@@ -79,6 +89,7 @@ function App() {
     } catch (error) {
 
       console.log(error);
+
       alert("Error Adding Candidate");
 
     }
@@ -89,16 +100,25 @@ function App() {
 
     try {
 
-      const res = await axios.post(`${API}/match`, {
-        requiredSkills:
-          requiredSkills.split(","),
-      });
+      const res = await axios.post(
+        `${API}/match`,
+        {
+          requiredSkills:
+            requiredSkills
+              .split(",")
+              .map(skill => skill.trim()),
+        }
+      );
+
+      console.log(res.data);
 
       setMatched(res.data);
 
     } catch (error) {
 
       console.log(error);
+
+      alert("Error Matching Candidates");
 
     }
   };
@@ -109,7 +129,9 @@ function App() {
     try {
 
       const res =
-        await axios.post(`${API}/ai/shortlist`);
+        await axios.post(
+          `${API}/ai/shortlist`
+        );
 
       const content =
         res.data.choices[0].message.content;
@@ -119,6 +141,8 @@ function App() {
     } catch (error) {
 
       console.log(error);
+
+      alert("Error Fetching AI Result");
 
     }
   };
@@ -146,6 +170,7 @@ function App() {
             required
           />
 
+
           <input
             type="email"
             name="email"
@@ -155,14 +180,16 @@ function App() {
             required
           />
 
+
           <input
             type="text"
             name="skills"
-            placeholder="Skills"
+            placeholder="Skills (React, Node.js)"
             value={formData.skills}
             onChange={handleChange}
             required
           />
+
 
           <input
             type="number"
@@ -173,12 +200,14 @@ function App() {
             required
           />
 
+
           <textarea
             name="bio"
             placeholder="Short Bio"
             value={formData.bio}
             onChange={handleChange}
           />
+
 
           <button type="submit">
             Add Candidate
@@ -193,6 +222,7 @@ function App() {
 
         <h2>Find Best Candidates</h2>
 
+
         <input
           type="text"
           placeholder="Required Skills"
@@ -202,9 +232,11 @@ function App() {
           }
         />
 
+
         <button onClick={matchCandidates}>
           Match Candidates
         </button>
+
 
         <button onClick={getAIShortlist}>
           AI Shortlist
@@ -217,17 +249,25 @@ function App() {
         All Candidates
       </h2>
 
+
       <div className="grid">
 
         {candidates.map((c) => (
 
-          <div className="card" key={c._id}>
+          <div
+            className="card"
+            key={c._id}
+          >
 
             <h3>{c.name}</h3>
 
+
             <p>
-              <strong>Email:</strong> {c.email}
+              <strong>Email:</strong>
+              {" "}
+              {c.email}
             </p>
+
 
             <p>
               <strong>Skills:</strong>
@@ -235,11 +275,13 @@ function App() {
               {c.skills.join(", ")}
             </p>
 
+
             <p>
               <strong>Experience:</strong>
               {" "}
               {c.experience}
             </p>
+
 
             <p>
               <strong>Bio:</strong>
@@ -258,32 +300,45 @@ function App() {
         Matched Candidates
       </h2>
 
+
       <div className="grid">
 
-        {matched.map((m) => (
+        {matched.length > 0 ? (
 
-          <div
-            className="card matched-card"
-            key={m._id}
-          >
+          matched.map((m) => (
 
-            <h3>{m.name}</h3>
+            <div
+              className="card matched-card"
+              key={m._id}
+            >
 
-            <p>
-              <strong>Match Score:</strong>
-              {" "}
-              {m.matchScore}%
-            </p>
+              <h3>{m.name}</h3>
 
-            <p>
-              <strong>Matched Skills:</strong>
-              {" "}
-              {m.matchedSkills.join(", ")}
-            </p>
 
-          </div>
+              <p>
+                <strong>Match Score:</strong>
+                {" "}
+                {m.matchScore}%
+              </p>
 
-        ))}
+
+              <p>
+                <strong>Matched Skills:</strong>
+                {" "}
+                {m.matchedSkills.join(", ")}
+              </p>
+
+            </div>
+
+          ))
+
+        ) : (
+
+          <p>
+            No matched candidates yet.
+          </p>
+
+        )}
 
       </div>
 
@@ -292,9 +347,14 @@ function App() {
         AI Recommendation
       </h2>
 
+
       <div className="card">
 
-        <p style={{ whiteSpace: "pre-line" }}>
+        <p
+          style={{
+            whiteSpace: "pre-line"
+          }}
+        >
           {aiResult}
         </p>
 
