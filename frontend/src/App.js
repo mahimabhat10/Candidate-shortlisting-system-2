@@ -16,6 +16,7 @@ function App() {
   const [matched, setMatched] = useState([]);
   const [aiResult, setAiResult] = useState("");
 
+<<<<<<< HEAD
   const API = "https://candidate-backend-l7mz.onrender.com/api";
 
   const fetchCandidates = async () => {
@@ -25,6 +26,13 @@ function App() {
     } catch (error) {
       console.log(error);
     }
+=======
+  const API = "https://candidate-backend-l7mz.onrender.com";
+
+  const fetchCandidates = async () => {
+    const res = await axios.get(`${API}/candidates`);
+    setCandidates(res.data);
+>>>>>>> 0fac5b39a1705c613e5b1c7aa4b10ce0fa7f5c8f
   };
 
   useEffect(() => {
@@ -41,6 +49,7 @@ function App() {
   const addCandidate = async (e) => {
     e.preventDefault();
 
+<<<<<<< HEAD
     try {
       await axios.post(`${API}/candidates`, {
         ...formData,
@@ -77,15 +86,51 @@ function App() {
     } catch (error) {
       console.log(error);
     }
+=======
+    await axios.post(`${API}/candidates`, {
+      ...formData,
+      skills: formData.skills.split(","),
+    });
+
+    alert("Candidate Added Successfully");
+
+    setFormData({
+      name: "",
+      email: "",
+      skills: "",
+      experience: "",
+      bio: "",
+    });
+
+    fetchCandidates();
+  };
+
+  const matchCandidates = async () => {
+    const res = await axios.post(`${API}/match`, {
+      requiredSkills: requiredSkills.split(","),
+      minExperience: 1,
+    });
+
+    setMatched(res.data);
+>>>>>>> 0fac5b39a1705c613e5b1c7aa4b10ce0fa7f5c8f
   };
 
   const getAIShortlist = async () => {
     try {
+<<<<<<< HEAD
       const res = await axios.post(`${API}/ai/shortlist`);
 
       const content =
         res.data.choices?.[0]?.message?.content ||
         "AI response received";
+=======
+      const res = await axios.post(
+        `${API}/ai/shortlist`
+      );
+
+      const content =
+        res.data.choices[0].message.content;
+>>>>>>> 0fac5b39a1705c613e5b1c7aa4b10ce0fa7f5c8f
 
       setAiResult(content);
 
@@ -244,4 +289,8 @@ function App() {
   );
 }
 
+<<<<<<< HEAD
 export default App;
+=======
+export default App;
+>>>>>>> 0fac5b39a1705c613e5b1c7aa4b10ce0fa7f5c8f
